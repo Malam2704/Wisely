@@ -15,6 +15,21 @@ import {
   CartesianGrid,
 } from "recharts";
 
+const COLORS = [
+  "#4dc9f6",
+  "#f67019",
+  "#f53794",
+  "#537bc4",
+  "#acc236",
+  "#166a8f",
+  "#00a950",
+  "#58595b",
+  "#8549ba",
+  "#ffb3ba",
+  "#ffd6a5",
+  "#caffbf",
+];
+
 type Filters = {
   includeTransfers: boolean;
   search: string;
@@ -26,6 +41,17 @@ function sum(nums: number[]) {
 
 function money(n: number) {
   return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
+}
+
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload || !payload.length) return null;
+  const value = payload[0].value;
+  return (
+    <div style={{ background: "white", border: "1px solid #ddd", padding: 8, borderRadius: 6 }}>
+      <div style={{ fontSize: 12, opacity: 0.75 }}>{format(new Date(label), "MMM d, yyyy")}</div>
+      <div style={{ fontWeight: 700, marginTop: 4 }}>{money(Number(value))}</div>
+    </div>
+  );
 }
 
 export default function App() {
@@ -149,7 +175,7 @@ export default function App() {
                   <PieChart>
                     <Pie data={byCategory} dataKey="value" nameKey="name" outerRadius={110}>
                       {byCategory.map((_, idx) => (
-                        <Cell key={idx} />
+                        <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip formatter={(v: any) => money(Number(v))} />
@@ -169,7 +195,7 @@ export default function App() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" hide />
                     <YAxis tickFormatter={(v) => `$${v}`} />
-                    <Tooltip formatter={(v: any) => money(Number(v))} labelFormatter={(l) => l} />
+                    <Tooltip content={CustomTooltip} />
                     <Line type="monotone" dataKey="value" dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
