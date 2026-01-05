@@ -120,6 +120,38 @@ export default function App() {
       .slice(0, 10);
   }, [expenseOnly]);
 
+  const [showAllTx, setShowAllTx] = useState(false);
+  const [txSort, setTxSort] = useState<{ key: "date" | "name" | "category" | "amount"; dir: "asc" | "desc" }>(
+    { key: "date", dir: "desc" }
+  );
+
+  const displayedTx = useMemo(() => {
+    const arr = [...filtered];
+    const dir = txSort.dir === "asc" ? 1 : -1;
+    arr.sort((a, b) => {
+      switch (txSort.key) {
+        case "amount":
+          return (a.amount - b.amount) * dir;
+        case "name":
+          return a.name.localeCompare(b.name) * dir;
+        case "category":
+          return a.categoryRaw.localeCompare(b.categoryRaw) * dir;
+        case "date":
+        default:
+          return (+a.date - +b.date) * dir;
+      }
+    });
+    return showAllTx ? arr : arr.slice(0, 25);
+  }, [filtered, txSort, showAllTx]);
+
+  function toggleSort(key: typeof txSort.key) {
+    setTxSort((s) => {
+      if (s.key === key) return { ...s, dir: s.dir === "asc" ? "desc" : "asc" };
+      // default direction: newest/highest first for date/amount
+      return { key, dir: key === "date" || key === "amount" ? "desc" : "asc" };
+    });
+  }
+
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: 20, fontFamily: "system-ui" }}>
       <h1 style={{ marginBottom: 6 }}>Spending Dashboard</h1>
@@ -206,47 +238,42 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12, marginTop: 12 }}>
             <div style={{ border: "1px solid #e6e6e6", borderRadius: 14, padding: 12 }}>
-              <div style={{ fontWeight: 650, marginBottom: 8 }}>Top Merchants</div>
-              <ol style={{ margin: 0, paddingLeft: 18 }}>
-                {topMerchants.map((m) => (
-                  <li key={m.name} style={{ marginBottom: 6 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {m.name}
-                      </span>
-                      <span style={{ fontVariantNumeric: "tabular-nums" }}>{money(m.value)}</span>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            <div style={{ border: "1px solid #e6e6e6", borderRadius: 14, padding: 12 }}>
-              <div style={{ fontWeight: 650, marginBottom: 8 }}>Recent Transactions</div>
-              <div style={{ maxHeight: 260, overflow: "auto" }}>
-                {filtered.slice(0, 25).map((t) => (
-                  <div
-                    key={t.id}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "110px 1fr 120px",
-                      gap: 10,
-                      padding: "8px 0",
-                      borderBottom: "1px solid #f0f0f0",
-                      fontSize: 14,
-                    }}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <div style={{ fontWeight: 650 }}>Transactions</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <div style={{ fontSize: 13, opacity: 0.8 }}>Showing {showAllTx ? filtered.length : Math.min(25, filtered.length)}</div>
+                  <button
+                    onClick={() => setShowAllTx((s) => !s)}
+                    style={{ border: "none", background: "#f3f3f3", padding: "6px 10px", borderRadius: 8, cursor: "pointer" }}
                   >
-                    <div style={{ opacity: 0.8 }}>{format(t.date, "MM/dd/yyyy")}</div>
-                    <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {t.name} <span style={{ opacity: 0.65 }}>· {t.categoryRaw}</span>
-                    </div>
-                    <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-                      {money(t.amount)}
-                    </div>
-                  </div>
-                ))}
+                    {showAllTx ? "Show recent" : "Show all"}
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ maxHeight: 420, overflow: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                  <thead>
+                    <tr style={{ textAlign: "left", borderBottom: "1px solid #eee" }}>
+                      <th style={{ padding: "8px 6px", cursor: "pointer" }} onClick={() => toggleSort("date")}>Date {txSort.key === "date" ? (txSort.dir === "asc" ? "▲" : "▼") : ""}</th>
+                      <th style={{ padding: "8px 6px", cursor: "pointer" }} onClick={() => toggleSort("name")}>Merchant {txSort.key === "name" ? (txSort.dir === "asc" ? "▲" : "▼") : ""}</th>
+                      <th style={{ padding: "8px 6px", cursor: "pointer" }} onClick={() => toggleSort("category")}>Category {txSort.key === "category" ? (txSort.dir === "asc" ? "▲" : "▼") : ""}</th>
+                      <th style={{ padding: "8px 6px", textAlign: "right", cursor: "pointer" }} onClick={() => toggleSort("amount")}>Amount {txSort.key === "amount" ? (txSort.dir === "asc" ? "▲" : "▼") : ""}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayedTx.map((t) => (
+                      <tr key={t.id} style={{ borderBottom: "1px solid #fafafa" }}>
+                        <td style={{ padding: "8px 6px", opacity: 0.85, width: 120 }}>{format(t.date, "MM/dd/yyyy")}</td>
+                        <td style={{ padding: "8px 6px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.name}</td>
+                        <td style={{ padding: "8px 6px", width: 200, opacity: 0.75 }}>{t.categoryRaw}</td>
+                        <td style={{ padding: "8px 6px", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{money(t.amount)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
