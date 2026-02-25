@@ -2,7 +2,7 @@ import { DEFAULT_BENEFITS } from "../constants";
 import type { Transaction } from "../types";
 import { getCycleWindowForDate } from "./benefitEngine";
 import { toIsoLocalDate } from "./date";
-import { uid } from "./utils";
+import { uid } from "./domainUtils";
 
 export function makeDemoTransactions(): Transaction[] {
   const now = new Date();

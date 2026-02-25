@@ -1,6 +1,6 @@
 import type { CsvImportResult, Transaction, TransactionKind } from "../types";
 import { toIsoLocalDate } from "./date";
-import { uid } from "./utils";
+import { uid } from "./domainUtils";
 
 export function parseCsv(text: string): CsvImportResult {
   const lines = text

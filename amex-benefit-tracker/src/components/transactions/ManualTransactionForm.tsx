@@ -1,7 +1,16 @@
 import { useState } from "react";
 import type { TransactionKind } from "../../types";
 import { todayIso } from "../../lib";
-import { Button, Input, Label, Select } from "../ui";
+import {
+  Button,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui";
 
 export function ManualTransactionForm(props: {
   onSubmit: (form: { date: string; description: string; amount: number; kind: TransactionKind }) => void;
@@ -41,9 +50,14 @@ export function ManualTransactionForm(props: {
       <div className="field-row">
         <Label>
           Type
-          <Select value={kind} onChange={(e) => setKind(e.target.value as TransactionKind)}>
-            <option value="purchase">purchase</option>
-            <option value="refund">refund</option>
+          <Select value={kind} onValueChange={(value) => setKind(value as TransactionKind)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="purchase">purchase</SelectItem>
+              <SelectItem value="refund">refund</SelectItem>
+            </SelectContent>
           </Select>
         </Label>
         <Label>

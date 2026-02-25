@@ -1,7 +1,7 @@
 import { BENEFITS_STORAGE_KEY, DEFAULT_BENEFITS, TRANSACTIONS_STORAGE_KEY } from "../constants";
 import type { Benefit, Transaction, TransactionKind } from "../types";
 import { todayIso } from "./date";
-import { uid } from "./utils";
+import { uid } from "./domainUtils";
 
 export function loadBenefits(): Benefit[] {
   try {

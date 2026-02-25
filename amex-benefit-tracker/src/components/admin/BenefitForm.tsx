@@ -1,7 +1,18 @@
 import { CADENCE_LABELS, MONTH_NAMES_LONG } from "../../constants";
 import { normalizeKeywords } from "../../lib";
 import type { Benefit, Cadence } from "../../types";
-import { Button, Input, Label, Select, Switch, Textarea } from "../ui";
+import {
+  Button,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Switch,
+  Textarea,
+} from "../ui";
 
 export function BenefitForm(props: {
   title: string;
@@ -55,27 +66,37 @@ export function BenefitForm(props: {
           Cadence
           <Select
             value={props.benefit.cadence}
-            onChange={(e) => props.onChange({ ...props.benefit, cadence: e.target.value as Cadence })}
+            onValueChange={(value) => props.onChange({ ...props.benefit, cadence: value as Cadence })}
           >
+            <SelectTrigger>
+              <SelectValue placeholder="Select cadence" />
+            </SelectTrigger>
+            <SelectContent>
             {(Object.keys(CADENCE_LABELS) as Cadence[]).map((cadence) => (
-              <option key={cadence} value={cadence}>
+              <SelectItem key={cadence} value={cadence}>
                 {CADENCE_LABELS[cadence]}
-              </option>
+              </SelectItem>
             ))}
+            </SelectContent>
           </Select>
         </Label>
 
         <Label>
           Anchor month
           <Select
-            value={props.benefit.anchorMonth}
-            onChange={(e) => props.onChange({ ...props.benefit, anchorMonth: Number(e.target.value) })}
+            value={String(props.benefit.anchorMonth)}
+            onValueChange={(value) => props.onChange({ ...props.benefit, anchorMonth: Number(value) })}
           >
+            <SelectTrigger>
+              <SelectValue placeholder="Select month" />
+            </SelectTrigger>
+            <SelectContent>
             {MONTH_NAMES_LONG.map((name, index) => (
-              <option key={name} value={index + 1}>
+              <SelectItem key={name} value={String(index + 1)}>
                 {index + 1} - {name}
-              </option>
+              </SelectItem>
             ))}
+            </SelectContent>
           </Select>
         </Label>
       </div>

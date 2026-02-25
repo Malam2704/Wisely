@@ -7,25 +7,24 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableHeaderCell,
+  TableHeader,
   TableRow,
-  TableWrapper,
 } from "../ui";
 
 export function TransactionsTable(props: { transactions: Transaction[]; onDelete: (id: string) => void }) {
   return (
-    <TableWrapper className="table-wrap">
+    <div className="table-wrap">
       <Table className="data-table">
-        <TableHead>
+        <TableHeader>
           <TableRow>
-            <TableHeaderCell>Date</TableHeaderCell>
-            <TableHeaderCell>Description</TableHeaderCell>
-            <TableHeaderCell>Type</TableHeaderCell>
-            <TableHeaderCell>Amount</TableHeaderCell>
-            <TableHeaderCell>Source</TableHeaderCell>
-            <TableHeaderCell></TableHeaderCell>
+            <TableHead>Date</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Source</TableHead>
+            <TableHead></TableHead>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {props.transactions.map((tx) => (
             <TableRow key={tx.id}>
@@ -34,7 +33,7 @@ export function TransactionsTable(props: { transactions: Transaction[]; onDelete
               <TableCell>
                 <Badge
                   className={`tag ${tx.kind === "refund" ? "tag-refund" : "tag-purchase"}`}
-                  variant={tx.kind === "refund" ? "success" : "warning"}
+                  variant="outline"
                 >
                   {tx.kind}
                 </Badge>
@@ -50,6 +49,6 @@ export function TransactionsTable(props: { transactions: Transaction[]; onDelete
           ))}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 }
