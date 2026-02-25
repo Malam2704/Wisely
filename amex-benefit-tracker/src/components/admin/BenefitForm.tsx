@@ -1,6 +1,7 @@
 import { CADENCE_LABELS, MONTH_NAMES_LONG } from "../../constants";
 import { normalizeKeywords } from "../../lib";
 import type { Benefit, Cadence } from "../../types";
+import { Button, Input, Label, Select, Switch, Textarea } from "../ui";
 
 export function BenefitForm(props: {
   title: string;
@@ -19,31 +20,27 @@ export function BenefitForm(props: {
     >
       <div className="benefit-form-head">
         <h3>{props.title}</h3>
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={props.benefit.active}
-            onChange={(e) => props.onChange({ ...props.benefit, active: e.target.checked })}
-          />
-          Active
-        </label>
+        <div className="toggle">
+          <Switch checked={props.benefit.active} onCheckedChange={(checked) => props.onChange({ ...props.benefit, active: checked })} />
+          <span>Active</span>
+        </div>
       </div>
 
       <div className="form-grid">
-        <label>
+        <Label>
           Benefit name
-          <input
+          <Input
             type="text"
             value={props.benefit.name}
             onChange={(e) => props.onChange({ ...props.benefit, name: e.target.value })}
             placeholder="Walmart+ Membership"
             required
           />
-        </label>
+        </Label>
 
-        <label>
+        <Label>
           Credit amount
-          <input
+          <Input
             type="number"
             min="0.01"
             step="0.01"
@@ -52,11 +49,11 @@ export function BenefitForm(props: {
             placeholder="13.99"
             required
           />
-        </label>
+        </Label>
 
-        <label>
+        <Label>
           Cadence
-          <select
+          <Select
             value={props.benefit.cadence}
             onChange={(e) => props.onChange({ ...props.benefit, cadence: e.target.value as Cadence })}
           >
@@ -65,12 +62,12 @@ export function BenefitForm(props: {
                 {CADENCE_LABELS[cadence]}
               </option>
             ))}
-          </select>
-        </label>
+          </Select>
+        </Label>
 
-        <label>
+        <Label>
           Anchor month
-          <select
+          <Select
             value={props.benefit.anchorMonth}
             onChange={(e) => props.onChange({ ...props.benefit, anchorMonth: Number(e.target.value) })}
           >
@@ -79,45 +76,45 @@ export function BenefitForm(props: {
                 {index + 1} - {name}
               </option>
             ))}
-          </select>
-        </label>
+          </Select>
+        </Label>
       </div>
 
-      <label>
+      <Label>
         Description (optional)
-        <input
+        <Input
           type="text"
           value={props.benefit.description}
           onChange={(e) => props.onChange({ ...props.benefit, description: e.target.value })}
           placeholder="Monthly reimbursement for Walmart+ subscription."
         />
-      </label>
+      </Label>
 
       <div className="form-grid">
-        <label>
+        <Label>
           Purchase keywords (comma or newline separated)
-          <textarea
+          <Textarea
             rows={4}
             value={props.benefit.purchaseKeywords.join(", ")}
             onChange={(e) => props.onChange({ ...props.benefit, purchaseKeywords: normalizeKeywords(e.target.value) })}
             placeholder="WALMART, WALMART+, WALMART PLUS"
           />
-        </label>
-        <label>
+        </Label>
+        <Label>
           Refund keywords (optional, fallback is purchase keywords)
-          <textarea
+          <Textarea
             rows={4}
             value={props.benefit.refundKeywords.join(", ")}
             onChange={(e) => props.onChange({ ...props.benefit, refundKeywords: normalizeKeywords(e.target.value) })}
             placeholder="AMEX, WALMART, CREDIT"
           />
-        </label>
+        </Label>
       </div>
 
       <div className="card-row-actions">
-        <button className="button" type="submit">
+        <Button type="submit">
           {props.saveLabel}
-        </button>
+        </Button>
       </div>
     </form>
   );

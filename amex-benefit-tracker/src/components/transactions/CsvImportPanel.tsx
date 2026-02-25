@@ -1,3 +1,5 @@
+import { Button, Input, Label, Textarea } from "../ui";
+
 export function CsvImportPanel(props: {
   csvText: string;
   setCsvText: (value: string) => void;
@@ -8,9 +10,9 @@ export function CsvImportPanel(props: {
   return (
     <div className="subpanel">
       <h3>CSV import</h3>
-      <label>
+      <Label>
         Upload CSV file
-        <input
+        <Input
           type="file"
           accept=".csv,.txt,.tsv"
           onChange={(e) => {
@@ -19,19 +21,19 @@ export function CsvImportPanel(props: {
             e.currentTarget.value = "";
           }}
         />
-      </label>
-      <label>
+      </Label>
+      <Label>
         Or paste CSV text
-        <textarea
+        <Textarea
           rows={8}
           value={props.csvText}
           onChange={(e) => props.setCsvText(e.target.value)}
           placeholder={"date,description,amount,type\n2026-02-01,WALMART PLUS MONTHLY MEMBERSHIP,13.99,purchase\n2026-02-03,AMEX WALMART+ CREDIT,13.99,refund"}
         />
-      </label>
-      <button className="button" type="button" onClick={props.onImport} disabled={!props.csvText.trim()}>
+      </Label>
+      <Button type="button" onClick={props.onImport} disabled={!props.csvText.trim()}>
         Import pasted CSV
-      </button>
+      </Button>
       {props.warnings.length > 0 ? (
         <div className="warning-box">
           <strong>Import notes</strong>

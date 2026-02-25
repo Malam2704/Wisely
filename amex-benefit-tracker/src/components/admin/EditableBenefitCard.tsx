@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Benefit } from "../../types";
+import { Button, Card } from "../ui";
 import { BenefitForm } from "./BenefitForm";
 
 export function EditableBenefitCard(props: {
@@ -14,7 +15,7 @@ export function EditableBenefitCard(props: {
   }, [props.benefit]);
 
   return (
-    <div className="subpanel">
+    <Card className="subpanel">
       <BenefitForm
         title={props.benefit.name || "Benefit"}
         benefit={local}
@@ -26,13 +27,13 @@ export function EditableBenefitCard(props: {
         }}
       />
       <div className="card-row-actions">
-        <button className="text-button" type="button" onClick={() => setLocal(props.benefit)}>
+        <Button className="text-button" variant="ghost" size="sm" type="button" onClick={() => setLocal(props.benefit)}>
           Revert
-        </button>
-        <button className="text-button danger-text" type="button" onClick={() => props.onDelete(props.benefit.id)}>
+        </Button>
+        <Button className="text-button danger-text" variant="ghost" size="sm" type="button" onClick={() => props.onDelete(props.benefit.id)}>
           Delete benefit
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

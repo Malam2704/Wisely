@@ -1,13 +1,14 @@
 import { CADENCE_LABELS, MONTH_NAMES_LONG } from "../../constants";
 import { formatCycleLabel, toMoney } from "../../lib";
 import type { TrackerSummaryItem } from "../../types";
+import { Card } from "../ui";
 import { ProgressRow, StatusPill } from "../common";
 
 export function BenefitStatusCard(props: { item: TrackerSummaryItem }) {
   const { benefit, current, previous, nextReset } = props.item;
 
   return (
-    <article className="benefit-card">
+    <Card className="benefit-card">
       <div className="benefit-card-head">
         <div>
           <h3>{benefit.name}</h3>
@@ -43,6 +44,6 @@ export function BenefitStatusCard(props: { item: TrackerSummaryItem }) {
           Previous: {formatCycleLabel(previous.cycle, benefit.cadence)} • {previous.status}
         </span>
       </div>
-    </article>
+    </Card>
   );
 }

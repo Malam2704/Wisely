@@ -1,4 +1,4 @@
-import { CsvImportPanel, EmptyState, ManualTransactionForm, TransactionsTable } from "../components";
+import { Button, CsvImportPanel, EmptyState, ManualTransactionForm, TransactionsTable } from "../components";
 import type { Transaction, TransactionKind } from "../types";
 
 export function TransactionsTab(props: {
@@ -23,9 +23,9 @@ export function TransactionsTab(props: {
               Manual entries work for quick testing. CSV import expects columns like <code>date</code>, <code>description</code>, <code>amount</code>, optional <code>type</code>.
             </p>
           </div>
-          <button className="button secondary" type="button" onClick={props.onSeedDemoTransactions}>
+          <Button variant="secondary" type="button" onClick={props.onSeedDemoTransactions}>
             Add demo transactions
-          </button>
+          </Button>
         </div>
         <div className="txn-input-grid">
           <ManualTransactionForm onSubmit={props.onAddManualTransaction} />
@@ -46,9 +46,9 @@ export function TransactionsTab(props: {
             <p>{props.sortedTransactions.length} transaction(s) loaded into the tracker.</p>
           </div>
           {props.sortedTransactions.length > 0 ? (
-            <button className="button danger" type="button" onClick={props.onClearAllTransactions}>
+            <Button variant="destructive" type="button" onClick={props.onClearAllTransactions}>
               Clear all transactions
-            </button>
+            </Button>
           ) : null}
         </div>
         {props.sortedTransactions.length === 0 ? (

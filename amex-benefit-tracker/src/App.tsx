@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { DEFAULT_BENEFITS } from "./constants";
-import { SummaryTile, TabButton } from "./components";
+import { SummaryTile, Tabs, TabsContent, TabsList, TabsTrigger } from "./components";
 import {
   getCycleWindowForDate,
   loadBenefits,
@@ -174,37 +174,41 @@ function App() {
         </div>
       </header>
 
-      <nav className="tabs" aria-label="Sections">
-        <TabButton label="Tracker" active={tab === "tracker"} onClick={() => setTab("tracker")} />
-        <TabButton label="Transactions" active={tab === "transactions"} onClick={() => setTab("transactions")} />
-        <TabButton label="Admin" active={tab === "admin"} onClick={() => setTab("admin")} />
-      </nav>
+      <Tabs value={tab} onValueChange={(value) => setTab(value as TabKey)}>
+        <TabsList className="tabs" aria-label="Sections">
+          <TabsTrigger value="tracker">Tracker</TabsTrigger>
+          <TabsTrigger value="transactions">Transactions</TabsTrigger>
+          <TabsTrigger value="admin">Admin</TabsTrigger>
+        </TabsList>
 
-      {tab === "tracker" ? <TrackerTab trackerSummaries={trackerSummaries} /> : null}
+        <TabsContent value="tracker">
+          <TrackerTab trackerSummaries={trackerSummaries} />
+        </TabsContent>
 
-      {tab === "transactions" ? (
-        <TransactionsTab
-          csvText={csvText}
-          csvWarnings={csvWarnings}
-          sortedTransactions={sortedTransactions}
-          setCsvText={setCsvText}
-          onAddManualTransaction={addManualTransaction}
-          onImportCsvText={importCsvText}
-          onImportCsvFile={importCsvFile}
-          onSeedDemoTransactions={seedDemoTransactions}
-          onDeleteTransaction={deleteTransaction}
-          onClearAllTransactions={() => setTransactions([])}
-        />
-      ) : null}
+        <TabsContent value="transactions">
+          <TransactionsTab
+            csvText={csvText}
+            csvWarnings={csvWarnings}
+            sortedTransactions={sortedTransactions}
+            setCsvText={setCsvText}
+            onAddManualTransaction={addManualTransaction}
+            onImportCsvText={importCsvText}
+            onImportCsvFile={importCsvFile}
+            onSeedDemoTransactions={seedDemoTransactions}
+            onDeleteTransaction={deleteTransaction}
+            onClearAllTransactions={() => setTransactions([])}
+          />
+        </TabsContent>
 
-      {tab === "admin" ? (
-        <AdminTab
-          benefits={benefits}
-          onSaveBenefit={upsertBenefit}
-          onDeleteBenefit={deleteBenefit}
-          onResetDefaults={() => setBenefits(DEFAULT_BENEFITS)}
-        />
-      ) : null}
+        <TabsContent value="admin">
+          <AdminTab
+            benefits={benefits}
+            onSaveBenefit={upsertBenefit}
+            onDeleteBenefit={deleteBenefit}
+            onResetDefaults={() => setBenefits(DEFAULT_BENEFITS)}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

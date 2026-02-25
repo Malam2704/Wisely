@@ -1,5 +1,5 @@
 import { BENEFITS_STORAGE_KEY, DEFAULT_BENEFITS, TRANSACTIONS_STORAGE_KEY } from "../constants";
-import type { Benefit, Transaction } from "../types";
+import type { Benefit, Transaction, TransactionKind } from "../types";
 import { todayIso } from "./date";
 import { uid } from "./utils";
 
@@ -33,14 +33,18 @@ export function loadTransactions(): Transaction[] {
     if (!Array.isArray(parsed)) return [];
     return parsed
       .filter((item) => item && typeof item === "object")
-      .map((tx) => ({
-        id: String(tx.id ?? uid()),
-        date: String(tx.date ?? todayIso()),
-        description: String(tx.description ?? ""),
-        amount: Math.abs(Number(tx.amount ?? 0)),
-        kind: tx.kind === "refund" ? "refund" : "purchase",
-        source: tx.source === "csv" ? "csv" : "manual",
-      }))
+      .map((tx) => {
+        const kind: TransactionKind = tx.kind === "refund" ? "refund" : "purchase";
+        const source: Transaction["source"] = tx.source === "csv" ? "csv" : "manual";
+        return {
+          id: String(tx.id ?? uid()),
+          date: String(tx.date ?? todayIso()),
+          description: String(tx.description ?? ""),
+          amount: Math.abs(Number(tx.amount ?? 0)),
+          kind,
+          source,
+        };
+      })
       .filter((tx) => tx.description && tx.amount > 0);
   } catch {
     return [];

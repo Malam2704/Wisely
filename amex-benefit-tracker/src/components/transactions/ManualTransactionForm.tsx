@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { TransactionKind } from "../../types";
 import { todayIso } from "../../lib";
+import { Button, Input, Label, Select } from "../ui";
 
 export function ManualTransactionForm(props: {
   onSubmit: (form: { date: string; description: string; amount: number; kind: TransactionKind }) => void;
@@ -23,31 +24,31 @@ export function ManualTransactionForm(props: {
       }}
     >
       <h3>Manual entry</h3>
-      <label>
+      <Label>
         Date
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-      </label>
-      <label>
+        <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+      </Label>
+      <Label>
         Description
-        <input
+        <Input
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="WALMART PLUS MONTHLY MEMBERSHIP"
           required
         />
-      </label>
+      </Label>
       <div className="field-row">
-        <label>
+        <Label>
           Type
-          <select value={kind} onChange={(e) => setKind(e.target.value as TransactionKind)}>
+          <Select value={kind} onChange={(e) => setKind(e.target.value as TransactionKind)}>
             <option value="purchase">purchase</option>
             <option value="refund">refund</option>
-          </select>
-        </label>
-        <label>
+          </Select>
+        </Label>
+        <Label>
           Amount
-          <input
+          <Input
             type="number"
             min="0.01"
             step="0.01"
@@ -56,11 +57,11 @@ export function ManualTransactionForm(props: {
             placeholder="13.99"
             required
           />
-        </label>
+        </Label>
       </div>
-      <button className="button" type="submit">
+      <Button type="submit">
         Add transaction
-      </button>
+      </Button>
     </form>
   );
 }

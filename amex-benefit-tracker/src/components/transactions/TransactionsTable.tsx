@@ -1,39 +1,55 @@
 import { formatDateLabel, toMoney } from "../../lib";
 import type { Transaction } from "../../types";
+import {
+  Badge,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+  TableWrapper,
+} from "../ui";
 
 export function TransactionsTable(props: { transactions: Transaction[]; onDelete: (id: string) => void }) {
   return (
-    <div className="table-wrap">
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Source</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+    <TableWrapper className="table-wrap">
+      <Table className="data-table">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Date</TableHeaderCell>
+            <TableHeaderCell>Description</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
+            <TableHeaderCell>Amount</TableHeaderCell>
+            <TableHeaderCell>Source</TableHeaderCell>
+            <TableHeaderCell></TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {props.transactions.map((tx) => (
-            <tr key={tx.id}>
-              <td>{formatDateLabel(tx.date)}</td>
-              <td>{tx.description}</td>
-              <td>
-                <span className={`tag ${tx.kind === "refund" ? "tag-refund" : "tag-purchase"}`}>{tx.kind}</span>
-              </td>
-              <td>{toMoney(tx.amount)}</td>
-              <td>{tx.source}</td>
-              <td>
-                <button className="text-button" type="button" onClick={() => props.onDelete(tx.id)}>
+            <TableRow key={tx.id}>
+              <TableCell>{formatDateLabel(tx.date)}</TableCell>
+              <TableCell>{tx.description}</TableCell>
+              <TableCell>
+                <Badge
+                  className={`tag ${tx.kind === "refund" ? "tag-refund" : "tag-purchase"}`}
+                  variant={tx.kind === "refund" ? "success" : "warning"}
+                >
+                  {tx.kind}
+                </Badge>
+              </TableCell>
+              <TableCell>{toMoney(tx.amount)}</TableCell>
+              <TableCell>{tx.source}</TableCell>
+              <TableCell>
+                <Button className="text-button" variant="ghost" size="sm" type="button" onClick={() => props.onDelete(tx.id)}>
                   Delete
-                </button>
-              </td>
-            </tr>
+                </Button>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableWrapper>
   );
 }

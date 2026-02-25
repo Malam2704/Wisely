@@ -2,6 +2,7 @@ import { useState } from "react";
 import { EmptyState } from "../common";
 import { makeBlankBenefit } from "../../lib";
 import type { Benefit } from "../../types";
+import { Button } from "../ui";
 import { BenefitForm } from "./BenefitForm";
 import { EditableBenefitCard } from "./EditableBenefitCard";
 
@@ -16,9 +17,9 @@ export function BenefitEditor(props: {
   return (
     <div className="stack-lg">
       <div className="editor-actions">
-        <button className="button secondary" type="button" onClick={props.onResetDefaults}>
+        <Button variant="secondary" type="button" onClick={props.onResetDefaults}>
           Reset to example defaults
-        </button>
+        </Button>
       </div>
 
       <BenefitForm
